@@ -44,46 +44,46 @@ export const App = () => {
     setFilter(filter);
   };
 
-  const handleEdit = (id: number, value: string) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, value: value };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
+  // const handleEdit = (id: number, value: string) => {
+  //   setTodos((todos) => {
+  //     const newTodos = todos.map((todo) => {
+  //       if (todo.id === id) {
+  //         return { ...todo, value: value };
+  //       }
+  //       return todo;
+  //     });
+  //     return newTodos;
+  //   });
+  // };
   //     const newTodo = todos.find((todo) => todo.id === id);
   //     if (!newTodo) return todos;
   //     return [...todos, newTodo];
   //   });
   // };
 
-  const handleCheck = (id: number, checked: boolean) => {
-    setTodos((todos) => {
-      const newTodos = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, checked };
-        }
-        return todo;
-      });
-      return newTodos;
-    });
-  };
+  // const handleCheck = (id: number, checked: boolean) => {
+  //   setTodos((todos) => {
+  //     const newTodos = todos.map((todo) => {
+  //       if (todo.id === id) {
+  //         return { ...todo, checked };
+  //       }
+  //       return todo;
+  //     });
+  //     return newTodos;
+  //   });
+  // };
 
-  const handleRemove = (id: number, removed: boolean) => {
-    setTodos((todos) => {
-      const newTodo = todos.map((todo) => {
-        if (todo.id === id) {
-          return { ...todo, removed };
-        }
-        return todo;
-      });
-      return newTodo;
-    });
-  };
+  // const handleRemove = (id: number, removed: boolean) => {
+  //   setTodos((todos) => {
+  //     const newTodo = todos.map((todo) => {
+  //       if (todo.id === id) {
+  //         return { ...todo, removed };
+  //       }
+  //       return todo;
+  //     });
+  //     return newTodo;
+  //   });
+  // };
 
   const filteredTodos = todos.filter((todo) => {
     // filter ステートの値に応じて異なる内容の配列を返す
