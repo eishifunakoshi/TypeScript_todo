@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Button } from './components/Button';
+import { Input } from './components/input';
 
 type Todo = {
   value: string;
@@ -6,6 +8,8 @@ type Todo = {
   checked: boolean;
   removed: boolean;
 };
+// Todo型エイリアスの定義　value：Todoの内容を格納　id：各Todo一意の識別子
+// checked：Todoがチェック済みかどうか　removed：Todoが削除されたかどうか
 
 type Filter = 'all' | 'checked' | 'unchecked' | 'removed';
 
@@ -25,12 +29,12 @@ export const App = () => {
         id: new Date().getTime(),
         checked: false,
         removed: false,
-        // new Dateで日付と時刻を表し、
-        // .getTimeでm秒単位で取得することで異なるIDを取得
       };
-
+      // new Dateで日付と時刻を表しgetTimeでm秒単位で取得し異なるIDを取得
       setTodos((todos) => [...todos, newTodo]);
       setText('');
+      // Todoリストの内容Todosを展開し新たに取得したnewTodoを末尾に追加
+      // その後フォームのテキスト入力を空にリセット
     }
   };
 
@@ -39,49 +43,15 @@ export const App = () => {
   };
   // React.ChangeEvent<HTMLInputElement>はReactコンポーネント内で
   // フォーム要素の値が変更されたときに、その変更イベントに関連する型情報を提供する
+  // テキストが入力される毎に入力内容(value)をsetTextを使ってtext状態変数に反映させる
 
   const handleSort = (filter: Filter) => {
     setFilter(filter);
   };
 
-  // const handleEdit = (id: number, value: string) => {
-  //   setTodos((todos) => {
-  //     const newTodos = todos.map((todo) => {
-  //       if (todo.id === id) {
-  //         return { ...todo, value: value };
-  //       }
-  //       return todo;
-  //     });
-  //     return newTodos;
-  //   });
-  // };
   //     const newTodo = todos.find((todo) => todo.id === id);
   //     if (!newTodo) return todos;
   //     return [...todos, newTodo];
-  //   });
-  // };
-
-  // const handleCheck = (id: number, checked: boolean) => {
-  //   setTodos((todos) => {
-  //     const newTodos = todos.map((todo) => {
-  //       if (todo.id === id) {
-  //         return { ...todo, checked };
-  //       }
-  //       return todo;
-  //     });
-  //     return newTodos;
-  //   });
-  // };
-
-  // const handleRemove = (id: number, removed: boolean) => {
-  //   setTodos((todos) => {
-  //     const newTodo = todos.map((todo) => {
-  //       if (todo.id === id) {
-  //         return { ...todo, removed };
-  //       }
-  //       return todo;
-  //     });
-  //     return newTodo;
   //   });
   // };
 
@@ -104,6 +74,7 @@ export const App = () => {
   const handleEmpty = () => {
     setTodos((todos) => todos.filter((todo) => !todo.removed));
   };
+  // removedプロパティがfalseのtodoのみで新たにtodosのリストを作成
 
   const handleTodo = <K extends keyof Todo, V extends Todo[K]>(
     id: number,
@@ -135,12 +106,11 @@ export const App = () => {
         <option value="removed">ゴミ箱</option>
       </select>
       {filter === 'removed' ? (
-        <button
-          onClick={handleEmpty}
+        <Button
+          title="ゴミ箱を空にする"
+          propsOnClick={handleEmpty}
           disabled={todos.filter((todo) => todo.removed).length === 0}
-        >
-          ゴミ箱を空にする
-        </button>
+        />
       ) : (
         filter !== 'checked' && (
           <form
@@ -149,33 +119,41 @@ export const App = () => {
               handleSubmit();
             }}
           >
-            <input type="text" value={text} onChange={(e) => handleChange(e)} />
-            <input type="submit" value="追加" onSubmit={handleSubmit} />
+            <Input
+              type="text"
+              propsOnchange={(e) => handleChange(e)}
+              value={text}
+            />
+            <Button title="追加" propsOnClick={() => handleSubmit} />
           </form>
         )
       )}
-
       <ol>
         {filteredTodos.map((todo) => {
           return (
             <li key={todo.id}>
-              <input
+              <Input
                 type="text"
-                disabled={todo.checked || todo.removed}
+                propsOnchange={(e) =>
+                  handleTodo(todo.id, 'value', e.target.value)
+                }
                 value={todo.value}
-                onChange={(e) => handleTodo(todo.id, 'value', e.target.value)}
+                disabled={todo.checked || todo.removed}
               />
-              <input
+              <Input
                 type="checkbox"
+                propsOnchange={() =>
+                  handleTodo(todo.id, 'checked', !todo.checked)
+                }
                 disabled={todo.removed}
                 checked={todo.checked}
-                onChange={() => handleTodo(todo.id, 'checked', !todo.checked)}
               />
-              <button
-                onClick={() => handleTodo(todo.id, 'removed', !todo.removed)}
-              >
-                {todo.removed ? '復元' : '削除'}
-              </button>
+              <Button
+                title={todo.removed ? '復元' : '削除'}
+                propsOnClick={() =>
+                  handleTodo(todo.id, 'removed', !todo.removed)
+                }
+              />
             </li>
           );
         })}
